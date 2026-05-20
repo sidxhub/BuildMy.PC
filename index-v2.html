@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuildMy.PC — Build Your Dream PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#030712;--surface:#07101f;--card:rgba(7,16,31,0.75);
+  --v1:#8b5cf6;--v2:#a78bfa;--c1:#22d3ee;--p1:#f472b6;--amber:#fbbf24;
+  --text:#f0f6ff;--muted:#475569;--border:rgba(139,92,246,0.25);
+  --glow-v:0 0 30px rgba(139,92,246,0.4);--glow-c:0 0 30px rgba(34,211,238,0.4);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;line-height:1.7;overflow-x:hidden;cursor:none}
+h1,h2,h3,h4,h5{font-family:'Russo One',sans-serif;letter-spacing:0.01em}
+a{text-decoration:none;color:inherit}
+button{cursor:none;border:none;font-family:'Outfit',sans-serif}
+img{max-width:100%;display:block}
+.container{max-width:1200px;margin:0 auto;padding:0 28px}
+
+/* MESH BG */
+body::before{content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(139,92,246,0.12) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 80% 80%,rgba(34,211,238,0.08) 0%,transparent 60%),
+             radial-gradient(ellipse 40% 40% at 60% 30%,rgba(244,114,182,0.05) 0%,transparent 60%);
+  pointer-events:none;z-index:0;animation:meshPulse 12s ease-in-out infinite alternate}
+@keyframes meshPulse{0%{opacity:0.7}100%{opacity:1}}
+
+/* GRID TEXTURE */
+body::after{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(139,92,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.04) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--v2);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s,background 0.2s;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(167,139,250,0.5);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left 0.12s ease,top 0.12s ease,width 0.25s,height 0.25s,border-color 0.25s}
+.cursor.active{width:20px;height:20px;background:var(--c1)}
+.cursor-ring.active{width:50px;height:50px;border-color:rgba(34,211,238,0.5)}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--v1),var(--c1));color:#fff;font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:0.08em;padding:14px 30px;border-radius:6px;border:none;transition:all 0.3s;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--c1),var(--v1));opacity:0;transition:opacity 0.3s}
+.btn-primary:hover::before{opacity:1}
+.btn-primary:hover{box-shadow:var(--glow-v),var(--glow-c);transform:translateY(-2px)}
+.btn-primary span{position:relative;z-index:1}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--v2);font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:0.06em;padding:13px 28px;border-radius:6px;border:1.5px solid var(--border);transition:all 0.3s}
+.btn-outline:hover{border-color:var(--v1);color:var(--v2);box-shadow:var(--glow-v);background:rgba(139,92,246,0.06)}
+.tag{display:inline-block;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--c1);border:1px solid rgba(34,211,238,0.25);padding:5px 14px;border-radius:20px;margin-bottom:18px;background:rgba(34,211,238,0.06)}
+.grad-text{background:linear-gradient(135deg,var(--v2) 0%,var(--c1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.grad-text-pink{background:linear-gradient(135deg,var(--v2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* TICKER */
+.ticker{background:linear-gradient(90deg,var(--v1),#6d28d9);padding:10px 0;overflow:hidden;position:relative;z-index:100}
+.ticker-inner{display:flex;gap:0;animation:tickerMove 30s linear infinite;white-space:nowrap}
+.ticker-item{font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:0 32px;color:rgba(255,255,255,0.85)}
+.ticker-dot{color:rgba(255,255,255,0.4)}
+
+/* NAVBAR */
+nav{position:fixed;top:38px;left:0;right:0;z-index:1000;transition:top 0.3s}
+nav.scrolled{top:0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;max-width:1200px;margin:0 auto;background:rgba(3,7,18,0.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:14px;box-shadow:0 0 40px rgba(0,0,0,0.5)}
+nav.scrolled .nav-inner{border-radius:0;border-left:none;border-right:none;border-top:none;max-width:100%}
+.logo{font-family:'Russo One',sans-serif;font-size:22px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{font-size:13px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:linear-gradient(90deg,var(--v1),var(--c1));transition:width 0.3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:14px}
+.cart-btn{position:relative;background:rgba(139,92,246,0.1);color:var(--v2);font-size:18px;padding:10px 14px;border-radius:8px;transition:all 0.2s;border:1px solid var(--border)}
+.cart-btn:hover{background:rgba(139,92,246,0.2);border-color:var(--v1)}
+.cart-count{position:absolute;top:-6px;right:-6px;background:linear-gradient(135deg,var(--p1),var(--v1));color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;padding:8px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;z-index:0}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;position:relative;z-index:2}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:var(--c1);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1.5px;background:var(--c1)}
+.hero h1{font-size:clamp(46px,5.5vw,80px);font-weight:400;line-height:1.02;margin-bottom:24px}
+.hero h1 .line2{background:linear-gradient(135deg,var(--v2) 0%,var(--c1) 60%,var(--p1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:18px;color:var(--muted);line-height:1.8;margin-bottom:40px;max-width:500px;font-weight:300}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:64px}
+.hero-stats{display:flex;gap:40px}
+.stat-val{font-family:'Russo One',sans-serif;font-size:36px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:13px;color:var(--muted)}
+
+/* HERO VISUAL */
+.hero-visual{position:relative}
+.pc-card{background:rgba(7,16,31,0.8);border:1px solid var(--border);border-radius:20px;padding:28px;backdrop-filter:blur(20px);box-shadow:0 0 80px rgba(139,92,246,0.1),inset 0 0 60px rgba(0,0,0,0.3);animation:cardFloat 5s ease-in-out infinite;position:relative;overflow:hidden}
+.pc-card::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--v1),var(--c1),transparent)}
+.pc-card::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--c1),var(--v1),transparent)}
+@keyframes cardFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(0.3deg)}}
+.pc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(139,92,246,0.15)}
+.pc-header-label{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.pc-status{display:flex;align-items:center;gap:6px;font-size:11px;color:#4ade80}
+.pc-status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.pc-components{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.pc-comp{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.12);transition:all 0.3s}
+.pc-comp:hover{background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3)}
+.pc-comp-icon{font-size:22px;flex-shrink:0}
+.pc-comp-info{flex:1}
+.pc-comp-name{font-weight:600;font-size:13px;color:var(--text)}
+.pc-comp-sub{font-size:11px;color:var(--muted)}
+.pc-bar-wrap{flex-shrink:0;width:60px}
+.pc-bar{height:4px;border-radius:2px;background:rgba(255,255,255,0.08);overflow:hidden}
+.pc-bar-fill{height:100%;border-radius:2px;animation:barLoad 1.5s ease-out forwards}
+@keyframes barLoad{from{width:0}to{width:var(--w)}}
+.pc-bar-fill.v{background:linear-gradient(90deg,var(--v1),var(--v2))}
+.pc-bar-fill.c{background:linear-gradient(90deg,var(--c1),#67e8f9)}
+.pc-bar-fill.p{background:linear-gradient(90deg,var(--p1),#fb7185)}
+.pc-bar-fill.g{background:linear-gradient(90deg,#4ade80,#86efac)}
+.pc-total{background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(34,211,238,0.08));border-radius:10px;padding:16px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.pc-total-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.pc-total-val{font-family:'Russo One',sans-serif;font-size:24px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.led-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--v1),var(--c1),var(--p1),var(--c1),var(--v1));background-size:200% 100%;animation:ledMove 3s linear infinite}
+@keyframes ledMove{0%{background-position:0% 0}100%{background-position:200% 0}}
+
+/* SCROLL INDICATOR */
+.scroll-down{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2}
+.scroll-down span{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.scroll-arrow{width:20px;height:20px;border-right:2px solid var(--v1);border-bottom:2px solid var(--v1);transform:rotate(45deg);animation:scrollBounce 1.5s ease-in-out infinite}
+@keyframes scrollBounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(6px)}}
+
+/* SECTIONS */
+section{padding:100px 0;position:relative;z-index:1}
+.section-header{text-align:center;margin-bottom:70px}
+.section-header h2{font-size:clamp(34px,4vw,54px);margin-bottom:18px}
+.section-header p{color:var(--muted);font-size:18px;max-width:560px;margin:0 auto;font-weight:300}
+.section-line{display:block;width:60px;height:2px;background:linear-gradient(90deg,var(--v1),var(--c1));margin:24px auto 0;border-radius:2px}
+
+/* CATEGORIES */
+#categories{background:var(--surface)}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.cat-card{border-radius:16px;padding:32px 20px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all 0.35s;border:1px solid transparent}
+.cat-card::before{content:'';position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity 0.35s}
+.cat-card:hover{transform:translateY(-6px)}
+.cat-card:hover::before{opacity:1}
+.cat-card:hover .cat-glow{opacity:1}
+.cat-glow{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:100px;height:100px;border-radius:50%;opacity:0;transition:opacity 0.35s;filter:blur(20px)}
+
+.cat-c1{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));border-color:rgba(139,92,246,0.2)}
+.cat-c1::before{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(139,92,246,0.06))}
+.cat-c1 .cat-glow{background:var(--v1)}
+.cat-c1 .cat-icon{filter:drop-shadow(0 0 10px rgba(139,92,246,0.6))}
+
+.cat-c2{background:linear-gradient(135deg,rgba(34,211,238,0.12),rgba(34,211,238,0.04));border-color:rgba(34,211,238,0.2)}
+.cat-c2::before{background:linear-gradient(135deg,rgba(34,211,238,0.2),rgba(34,211,238,0.06))}
+.cat-c2 .cat-glow{background:var(--c1)}
+.cat-c2 .cat-icon{filter:drop-shadow(0 0 10px rgba(34,211,238,0.6))}
+
+.cat-c3{background:linear-gradient(135deg,rgba(244,114,182,0.12),rgba(244,114,182,0.04));border-color:rgba(244,114,182,0.2)}
+.cat-c3::before{background:linear-gradient(135deg,rgba(244,114,182,0.2),rgba(244,114,182,0.06))}
+.cat-c3 .cat-glow{background:var(--p1)}
+.cat-c3 .cat-icon{filter:drop-shadow(0 0 10px rgba(244,114,182,0.6))}
+
+.cat-c4{background:linear-gradient(135deg,rgba(74,222,128,0.12),rgba(74,222,128,0.04));border-color:rgba(74,222,128,0.2)}
+.cat-c4::before{background:linear-gradient(135deg,rgba(74,222,128,0.2),rgba(74,222,128,0.06))}
+.cat-c4 .cat-glow{background:#4ade80}
+.cat-c4 .cat-icon{filter:drop-shadow(0 0 10px rgba(74,222,128,0.6))}
+
+.cat-c5{background:linear-gradient(135deg,rgba(251,146,60,0.12),rgba(251,146,60,0.04));border-color:rgba(251,146,60,0.2)}
+.cat-c5::before{background:linear-gradient(135deg,rgba(251,146,60,0.2),rgba(251,146,60,0.06))}
+.cat-c5 .cat-glow{background:#fb923c}
+.cat-c5 .cat-icon{filter:drop-shadow(0 0 10px rgba(251,146,60,0.6))}
+
+.cat-c6{background:linear-gradient(135deg,rgba(125,211,252,0.12),rgba(125,211,252,0.04));border-color:rgba(125,211,252,0.2)}
+.cat-c6::before{background:linear-gradient(135deg,rgba(125,211,252,0.2),rgba(125,211,252,0.06))}
+.cat-c6 .cat-glow{background:#7dd3fc}
+.cat-c6 .cat-icon{filter:drop-shadow(0 0 10px rgba(125,211,252,0.6))}
+
+.cat-c7{background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(251,191,36,0.04));border-color:rgba(251,191,36,0.2)}
+.cat-c7::before{background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(251,191,36,0.06))}
+.cat-c7 .cat-glow{background:var(--amber)}
+.cat-c7 .cat-icon{filter:drop-shadow(0 0 10px rgba(251,191,36,0.6))}
+
+.cat-c8{background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(167,139,250,0.04));border-color:rgba(167,139,250,0.2)}
+.cat-c8::before{background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(167,139,250,0.06))}
+.cat-c8 .cat-glow{background:var(--v2)}
+.cat-c8 .cat-icon{filter:drop-shadow(0 0 10px rgba(167,139,250,0.6))}
+
+.cat-icon{font-size:44px;margin-bottom:16px;display:block;transition:transform 0.35s}
+.cat-card:hover .cat-icon{transform:scale(1.15) rotate(-5deg)}
+.cat-name{font-family:'Russo One',sans-serif;font-size:15px;color:var(--text);margin-bottom:6px}
+.cat-count{font-size:12px;color:var(--muted)}
+
+/* PRODUCTS */
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.35s;backdrop-filter:blur(10px);position:relative}
+.product-card::before{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(139,92,246,0.05),transparent);opacity:0;transition:opacity 0.35s;pointer-events:none;z-index:0}
+.product-card:hover{border-color:rgba(139,92,246,0.5);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4),var(--glow-v)}
+.product-card:hover::before{opacity:1}
+.product-img{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.product-img .big-icon{font-size:80px;position:relative;z-index:2;transition:transform 0.35s;filter:drop-shadow(0 0 20px rgba(139,92,246,0.5))}
+.product-card:hover .big-icon{transform:scale(1.12) rotate(-3deg)}
+.product-img .bg-pattern{position:absolute;inset:0;opacity:0.07;background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,0.4) 1px,transparent 0);background-size:20px 20px}
+.product-img .bg-glow{position:absolute;width:120px;height:120px;border-radius:50%;filter:blur(40px);opacity:0.4}
+.img-bg-1{background:linear-gradient(135deg,#1a0535,#0d102e)}
+.img-bg-2{background:linear-gradient(135deg,#001a2e,#001f40)}
+.img-bg-3{background:linear-gradient(135deg,#1a0020,#2a0030)}
+.img-bg-4{background:linear-gradient(135deg,#001a10,#002a18)}
+.img-bg-5{background:linear-gradient(135deg,#1a1000,#251800)}
+.img-bg-6{background:linear-gradient(135deg,#001a1a,#002a2a)}
+.product-badge{position:absolute;top:14px;left:14px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;z-index:3}
+.badge-hot{background:linear-gradient(135deg,var(--p1),var(--v1));color:#fff}
+.badge-sale{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff}
+.badge-best{background:linear-gradient(135deg,var(--c1),var(--v1));color:#fff}
+.badge-pick{background:linear-gradient(135deg,var(--v1),var(--p1));color:#fff}
+.product-body{padding:22px;position:relative;z-index:1}
+.product-category{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--c1);margin-bottom:8px}
+.product-name{font-family:'Russo One',sans-serif;font-size:17px;color:var(--text);margin-bottom:8px;line-height:1.3}
+.product-specs{font-size:13px;color:var(--muted);margin-bottom:18px}
+.product-footer{display:flex;align-items:center;justify-content:space-between}
+.product-price{font-family:'Russo One',sans-serif;font-size:24px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.product-old{display:block;font-size:12px;color:var(--muted);text-decoration:line-through;font-family:'Outfit',sans-serif}
+.add-to-cart{background:rgba(139,92,246,0.12);border:1.5px solid rgba(139,92,246,0.3);color:var(--v2);padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;transition:all 0.25s}
+.add-to-cart:hover{background:linear-gradient(135deg,var(--v1),var(--c1));border-color:transparent;color:#fff;box-shadow:var(--glow-v)}
+
+/* BUILDER */
+#builder{background:var(--surface)}
+.builder-layout{display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:start}
+.builder-steps{display:flex;flex-direction:column;gap:14px}
+.builder-step{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.3s;backdrop-filter:blur(10px)}
+.builder-step.active{border-color:rgba(139,92,246,0.5);box-shadow:0 0 30px rgba(139,92,246,0.1)}
+.step-header{display:flex;align-items:center;gap:16px;padding:20px;cursor:none}
+.step-num{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:13px;background:rgba(139,92,246,0.1);border:1.5px solid var(--border);color:var(--v2);transition:all 0.3s}
+.builder-step.active .step-num{background:linear-gradient(135deg,var(--v1),var(--c1));border-color:transparent;color:#fff;box-shadow:var(--glow-v)}
+.step-label{flex:1}
+.step-label-title{font-family:'Russo One',sans-serif;font-size:15px;color:var(--text)}
+.step-label-sel{font-size:13px;color:var(--muted);margin-top:3px;transition:color 0.3s}
+.step-label-sel.chosen{color:var(--c1)}
+.step-chevron{font-size:18px;color:var(--muted);transition:transform 0.3s,color 0.3s}
+.builder-step.active .step-chevron{transform:rotate(180deg);color:var(--v2)}
+.step-body{display:none;padding:0 20px 20px}
+.builder-step.active .step-body{display:block}
+.option-list{display:flex;flex-direction:column;gap:10px}
+.option-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);cursor:none;transition:all 0.25s}
+.option-item:hover{border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.06)}
+.option-item.selected{border-color:rgba(139,92,246,0.6);background:rgba(139,92,246,0.1);box-shadow:inset 0 0 20px rgba(139,92,246,0.05)}
+.option-name{font-weight:600;font-size:14px;color:var(--text)}
+.option-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.option-price{font-family:'Russo One',sans-serif;font-size:16px;color:var(--v2)}
+.build-summary{background:var(--card);border:1px solid var(--border);border-radius:16px;position:sticky;top:110px;backdrop-filter:blur(20px);overflow:hidden}
+.summary-top-line{height:2px;background:linear-gradient(90deg,var(--v1),var(--c1),var(--p1))}
+.summary-header{padding:22px 24px;border-bottom:1px solid var(--border);font-family:'Russo One',sans-serif;font-size:16px;display:flex;align-items:center;gap:10px}
+.summary-header .grad-text{font-size:16px}
+.summary-items{padding:20px 24px;min-height:180px}
+.summary-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px}
+.summary-item:last-child{border-bottom:none}
+.summary-item-name{color:var(--muted)}
+.summary-item-val{font-family:'Russo One',sans-serif;font-size:14px;color:var(--v2)}
+.summary-empty{color:var(--muted);font-size:14px;text-align:center;padding:40px 0;line-height:2}
+.summary-total{padding:20px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.total-label{font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.total-val{font-family:'Russo One',sans-serif;font-size:30px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.summary-cta{padding:0 24px 24px}
+.summary-cta .btn-primary{width:100%;justify-content:center}
+
+/* BUILDS */
+.builds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.build-card{border-radius:20px;overflow:hidden;transition:all 0.35s;position:relative;border:1px solid var(--border)}
+.build-card:hover{transform:translateY(-8px)}
+.build-img{height:200px;position:relative;display:flex;align-items:flex-end}
+.build-img-overlay{position:absolute;inset:0}
+.build-img-content{position:relative;z-index:1;padding:20px;width:100%}
+.build-tier-tag{font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px;padding:4px 12px;border-radius:20px;display:inline-block}
+.build-name-hero{font-family:'Russo One',sans-serif;font-size:26px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
+.build-img-1{background:linear-gradient(135deg,#0a001f,#1a0040,#0d1b4d)}
+.build-img-2{background:linear-gradient(135deg,#100030,#2a0060,#1a004d)}
+.build-img-3{background:linear-gradient(135deg,#1a0800,#3d1800,#1a0a00)}
+.build-card-1 .build-img-overlay{background:linear-gradient(to top,rgba(10,0,31,0.95) 0%,rgba(10,0,31,0.3) 100%)}
+.build-card-2 .build-img-overlay{background:linear-gradient(to top,rgba(16,0,48,0.95) 0%,rgba(16,0,48,0.3) 100%)}
+.build-card-3 .build-img-overlay{background:linear-gradient(to top,rgba(26,8,0,0.95) 0%,rgba(26,8,0,0.3) 100%)}
+/* Build card floating icons */
+.build-float-icon{position:absolute;font-size:80px;right:20px;top:50%;transform:translateY(-60%);opacity:0.25;z-index:0}
+.build-body{background:var(--card);backdrop-filter:blur(10px);padding:20px 24px}
+.build-badge-row{margin-bottom:12px}
+.build-badge{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+.build-specs{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.spec-row{display:flex;align-items:center;gap:12px;font-size:14px}
+.spec-key{color:var(--muted);font-size:11px;letter-spacing:0.05em;min-width:52px;text-transform:uppercase}
+.spec-val{color:var(--text);font-weight:500}
+.build-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border)}
+.build-price{font-family:'Russo One',sans-serif;font-size:28px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.build-badge-cyan{background:rgba(34,211,238,0.15);color:var(--c1);border:1px solid rgba(34,211,238,0.3)}
+.build-badge-violet{background:rgba(139,92,246,0.15);color:var(--v2);border:1px solid rgba(139,92,246,0.3)}
+.build-badge-amber{background:rgba(251,191,36,0.15);color:var(--amber);border:1px solid rgba(251,191,36,0.3)}
+.build-card-1:hover{box-shadow:0 30px 80px rgba(34,211,238,0.15),0 0 0 1px rgba(34,211,238,0.3)}
+.build-card-2:hover{box-shadow:0 30px 80px rgba(139,92,246,0.2),0 0 0 1px rgba(139,92,246,0.4)}
+.build-card-3:hover{box-shadow:0 30px 80px rgba(251,191,36,0.15),0 0 0 1px rgba(251,191,36,0.3)}
+
+/* WHY */
+#why{background:var(--surface)}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 24px;text-align:center;transition:all 0.35s;backdrop-filter:blur(10px);position:relative;overflow:hidden}
+.why-card::after{content:'';position:absolute;inset:-1px;border-radius:16px;background:linear-gradient(135deg,var(--v1),var(--c1));opacity:0;transition:opacity 0.35s;z-index:-1}
+.why-card:hover{border-color:transparent;transform:translateY(-6px);box-shadow:var(--glow-v)}
+.why-card:hover::after{opacity:0.15}
+.why-icon-wrap{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(34,211,238,0.1));border:1px solid rgba(139,92,246,0.2);transition:all 0.35s}
+.why-card:hover .why-icon-wrap{background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(34,211,238,0.2));border-color:rgba(139,92,246,0.4);box-shadow:var(--glow-v)}
+.why-title{font-family:'Russo One',sans-serif;font-size:17px;margin-bottom:12px}
+.why-desc{color:var(--muted);font-size:14px;line-height:1.8}
+
+/* TESTIMONIALS */
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testimonial-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;transition:all 0.35s;backdrop-filter:blur(10px);position:relative}
+.testimonial-card::before{content:'❝';position:absolute;top:20px;right:24px;font-size:60px;color:rgba(139,92,246,0.1);font-family:Georgia,serif;line-height:1}
+.testimonial-card:hover{border-color:rgba(139,92,246,0.4);transform:translateY(-4px);box-shadow:var(--glow-v)}
+.stars{font-size:14px;letter-spacing:3px;margin-bottom:16px;background:linear-gradient(90deg,var(--amber),#fcd34d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.testimonial-text{color:var(--text);font-size:15px;line-height:1.85;margin-bottom:24px;font-style:italic;opacity:0.85}
+.testimonial-author{display:flex;align-items:center;gap:14px}
+.author-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--v1),var(--c1));display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:14px;color:#fff;flex-shrink:0;box-shadow:var(--glow-v)}
+.author-name{font-family:'Russo One',sans-serif;font-size:14px;margin-bottom:2px}
+.author-sub{font-size:12px;color:var(--muted)}
+
+/* NEWSLETTER */
+#newsletter{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(34,211,238,0.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.newsletter-inner{text-align:center;max-width:580px;margin:0 auto}
+.newsletter-inner h2{font-size:clamp(28px,4vw,46px);margin-bottom:16px}
+.newsletter-inner p{color:var(--muted);margin-bottom:36px;font-size:17px;font-weight:300}
+.nl-form{display:flex;gap:12px;max-width:460px;margin:0 auto}
+.nl-input{flex:1;background:rgba(7,16,31,0.8);border:1.5px solid var(--border);color:var(--text);border-radius:8px;padding:14px 20px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.25s;backdrop-filter:blur(10px)}
+.nl-input:focus{border-color:var(--v1)}
+.nl-input::placeholder{color:var(--muted)}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:80px 0 40px}
+.footer-top-line{height:1px;background:linear-gradient(90deg,transparent,var(--v1),var(--c1),var(--p1),transparent);margin-bottom:80px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:64px}
+.footer-brand .logo-text{font-family:'Russo One',sans-serif;font-size:22px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:16px}
+.footer-brand p{color:var(--muted);font-size:14px;line-height:1.85;max-width:280px}
+.footer-social{display:flex;gap:12px;margin-top:24px}
+.social-btn{width:38px;height:38px;border-radius:10px;background:rgba(139,92,246,0.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.25s}
+.social-btn:hover{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(34,211,238,0.1));border-color:rgba(139,92,246,0.4);box-shadow:var(--glow-v)}
+.footer-col h4{font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:24px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+.footer-col ul li a{font-size:14px;color:var(--muted);transition:color 0.2s;font-weight:300}
+.footer-col ul li a:hover{color:var(--v2)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:13px;color:var(--muted)}
+.footer-bottom a{color:var(--v2)}
+
+/* CART */
+.cart-overlay{position:fixed;inset:0;background:rgba(3,7,18,0.7);z-index:1100;opacity:0;visibility:hidden;transition:all 0.3s;backdrop-filter:blur(8px)}
+.cart-overlay.open{opacity:1;visibility:visible}
+.cart-sidebar{position:fixed;top:0;right:0;bottom:0;width:420px;background:var(--surface);border-left:1px solid var(--border);z-index:1200;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+.cart-sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v1),var(--c1),var(--p1))}
+.cart-overlay.open .cart-sidebar{transform:translateX(0)}
+.cart-header{display:flex;align-items:center;justify-content:space-between;padding:26px 24px;border-bottom:1px solid var(--border)}
+.cart-header h3{font-family:'Russo One',sans-serif;font-size:18px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.close-cart{background:rgba(139,92,246,0.1);color:var(--muted);font-size:18px;transition:all 0.2s;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.close-cart:hover{background:rgba(139,92,246,0.2);color:var(--text)}
+.cart-items{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.cart-item{display:flex;gap:14px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;align-items:center;transition:border-color 0.2s}
+.cart-item:hover{border-color:rgba(139,92,246,0.3)}
+.cart-item-icon{font-size:30px;width:48px;text-align:center;flex-shrink:0;background:rgba(139,92,246,0.08);border-radius:10px;height:48px;display:flex;align-items:center;justify-content:center}
+.cart-item-info{flex:1}
+.cart-item-name{font-family:'Russo One',sans-serif;font-size:13px;margin-bottom:3px}
+.cart-item-cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.cart-item-price{font-family:'Russo One',sans-serif;font-size:15px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.remove-item{background:none;color:var(--muted);font-size:16px;transition:color 0.2s;padding:4px;line-height:1}
+.remove-item:hover{color:#f87171}
+.cart-empty{text-align:center;padding:60px 24px;color:var(--muted)}
+.cart-empty-icon{font-size:60px;margin-bottom:16px;opacity:0.5}
+.cart-footer{padding:24px;border-top:1px solid var(--border)}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:16px;align-items:center}
+.cart-total span{font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.cart-total strong{font-family:'Russo One',sans-serif;font-size:26px;background:linear-gradient(135deg,var(--v2),var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.checkout-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--v1),var(--c1));color:#fff;border-radius:10px;font-family:'Russo One',sans-serif;font-weight:400;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.3s;box-shadow:0 4px 20px rgba(139,92,246,0.3)}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,0.5)}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:linear-gradient(135deg,var(--v1),var(--c1));color:#fff;font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:0.05em;padding:14px 28px;border-radius:40px;z-index:3000;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;box-shadow:0 8px 30px rgba(139,92,246,0.4)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1024px){.cat-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .hero-eyebrow{justify-content:center}
+  .hero-ctas{justify-content:center}
+  .hero-stats{justify-content:center}
+  .pc-card{display:none}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .builds-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+  .builder-layout{grid-template-columns:1fr}
+  .build-summary{position:static}
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  .testimonials-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .cart-sidebar{width:100%}
+  .nl-form{flex-direction:column}
+  body{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
+@media(max-width:600px){
+  .product-grid{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item">RTX 5090 Now Available <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">AMD Ryzen 9000 Series <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">DDR5 Prices at All-Time Low <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Free Shipping on Orders Over ₹5,000 <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">3-Year Warranty on All Products <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">New Samsung 9100 Pro SSDs In Stock <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">RTX 5090 Now Available <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">AMD Ryzen 9000 Series <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">DDR5 Prices at All-Time Low <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Free Shipping on Orders Over ₹5,000 <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="logo">BuildMy.PC</a>
+    <ul class="nav-links">
+      <li><a href="#categories">Components</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#builder">PC Builder</a></li>
+      <li><a href="#builds">Builds</a></li>
+      <li><a href="#why">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="cart-btn" onclick="toggleCart()" aria-label="Cart">
+        🛒 <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="hero-eyebrow">India's #1 PC Building Store</p>
+        <h1>
+          <span>Build the PC</span><br>
+          <span class="line2">of Your Dreams.</span>
+        </h1>
+        <p>Hand-picked components, expert configurations, and unbeatable prices. From budget builds to extreme gaming rigs — everything you need in one place.</p>
+        <div class="hero-ctas">
+          <a href="#builder" class="btn-primary"><span>⚙ Start Building</span></a>
+          <a href="#builds" class="btn-outline">🖥 View Builds</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="stat-val" data-target="500">0</div>
+            <div class="stat-label">Components</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-val" data-target="12000">0</div>
+            <div class="stat-label">Happy Builders</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-val" data-target="49" data-suffix="★">0</div>
+            <div class="stat-label">Rating / 50</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="pc-card">
+          <div class="pc-header">
+            <span class="pc-header-label">System Monitor</span>
+            <div class="pc-status"><span class="pc-status-dot"></span> All Systems Online</div>
+          </div>
+          <div class="pc-components">
+            <div class="pc-comp">
+              <span class="pc-comp-icon">🧠</span>
+              <div class="pc-comp-info">
+                <div class="pc-comp-name">AMD Ryzen 9 7950X</div>
+                <div class="pc-comp-sub">16 Cores · 32 Threads · AM5</div>
+              </div>
+              <div class="pc-bar-wrap">
+                <div class="pc-bar"><div class="pc-bar-fill v" style="--w:92%"></div></div>
+                <div style="font-size:10px;color:var(--v2);text-align:right;margin-top:3px">92%</div>
+              </div>
+            </div>
+            <div class="pc-comp">
+              <span class="pc-comp-icon">🎮</span>
+              <div class="pc-comp-info">
+                <div class="pc-comp-name">RTX 4090 24GB</div>
+                <div class="pc-comp-sub">Ada Lovelace · GDDR6X</div>
+              </div>
+              <div class="pc-bar-wrap">
+                <div class="pc-bar"><div class="pc-bar-fill c" style="--w:78%"></div></div>
+                <div style="font-size:10px;color:var(--c1);text-align:right;margin-top:3px">78%</div>
+              </div>
+            </div>
+            <div class="pc-comp">
+              <span class="pc-comp-icon">💾</span>
+              <div class="pc-comp-info">
+                <div class="pc-comp-name">64GB DDR5 6000</div>
+                <div class="pc-comp-sub">Dual Channel · CL30</div>
+              </div>
+              <div class="pc-bar-wrap">
+                <div class="pc-bar"><div class="pc-bar-fill p" style="--w:61%"></div></div>
+                <div style="font-size:10px;color:var(--p1);text-align:right;margin-top:3px">61%</div>
+              </div>
+            </div>
+            <div class="pc-comp">
+              <span class="pc-comp-icon">💿</span>
+              <div class="pc-comp-info">
+                <div class="pc-comp-name">2TB Samsung 990 Pro</div>
+                <div class="pc-comp-sub">PCIe 4.0 · 7,450 MB/s</div>
+              </div>
+              <div class="pc-bar-wrap">
+                <div class="pc-bar"><div class="pc-bar-fill g" style="--w:38%"></div></div>
+                <div style="font-size:10px;color:#4ade80;text-align:right;margin-top:3px">38%</div>
+              </div>
+            </div>
+          </div>
+          <div class="pc-total">
+            <div><div class="pc-total-label">Build Total</div></div>
+            <div class="pc-total-val">₹3,24,999</div>
+          </div>
+          <div class="led-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-down">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Shop by Category</div>
+      <h2><span class="grad-text">Every Component</span> You Need</h2>
+      <p>From processors to peripherals, find every part to complete your build.</p>
+      <span class="section-line"></span>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card cat-c1 reveal reveal-delay-1" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">🧠</span>
+        <div class="cat-name">Processors</div><div class="cat-count">48 products</div>
+      </div>
+      <div class="cat-card cat-c2 reveal reveal-delay-2" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">🎮</span>
+        <div class="cat-name">Graphics Cards</div><div class="cat-count">62 products</div>
+      </div>
+      <div class="cat-card cat-c3 reveal reveal-delay-3" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">💾</span>
+        <div class="cat-name">Memory (RAM)</div><div class="cat-count">34 products</div>
+      </div>
+      <div class="cat-card cat-c4 reveal reveal-delay-4" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">💿</span>
+        <div class="cat-name">Storage / SSDs</div><div class="cat-count">55 products</div>
+      </div>
+      <div class="cat-card cat-c5 reveal reveal-delay-1" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">🔌</span>
+        <div class="cat-name">Motherboards</div><div class="cat-count">41 products</div>
+      </div>
+      <div class="cat-card cat-c6 reveal reveal-delay-2" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">❄️</span>
+        <div class="cat-name">Cooling</div><div class="cat-count">38 products</div>
+      </div>
+      <div class="cat-card cat-c7 reveal reveal-delay-3" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">⚡</span>
+        <div class="cat-name">Power Supplies</div><div class="cat-count">27 products</div>
+      </div>
+      <div class="cat-card cat-c8 reveal reveal-delay-4" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <div class="cat-glow"></div><span class="cat-icon">🖥️</span>
+        <div class="cat-name">PC Cases</div><div class="cat-count">44 products</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Featured Products</div>
+      <h2>Top Picks <span class="grad-text-pink">This Month</span></h2>
+      <p>Best-selling components handpicked by our expert builders.</p>
+      <span class="section-line"></span>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- PC BUILDER -->
+<section id="builder">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Interactive Tool</div>
+      <h2><span class="grad-text">Configure</span> Your Build</h2>
+      <p>Select components step by step and watch your total update live.</p>
+      <span class="section-line"></span>
+    </div>
+    <div class="builder-layout">
+      <div class="builder-steps reveal-left" id="builderSteps"></div>
+      <div class="build-summary reveal-right">
+        <div class="summary-top-line"></div>
+        <div class="summary-header">⚙ <span class="grad-text">Your Build</span></div>
+        <div class="summary-items" id="summaryItems"><div class="summary-empty">✦ Start selecting components<br>to see your build take shape here.</div></div>
+        <div class="summary-total"><div class="total-label">Total</div><div class="total-val" id="buildTotal">₹0</div></div>
+        <div class="summary-cta"><button class="btn-primary" onclick="addBuildToCart()"><span>🛒 Add Build to Cart</span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BUILDS -->
+<section id="builds">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Pre-built Configs</div>
+      <h2>Ready-to-Order <span class="grad-text">Builds</span></h2>
+      <p>Expert-curated configurations for every budget and use case.</p>
+      <span class="section-line"></span>
+    </div>
+    <div class="builds-grid">
+      <div class="build-card build-card-1 reveal reveal-delay-1">
+        <div class="build-img build-img-1">
+          <div class="build-img-overlay build-card-1"></div>
+          <div class="build-float-icon">🖥️</div>
+          <div class="build-img-content">
+            <div class="build-tier-tag build-badge-cyan">Starter · 1080p</div>
+            <div class="build-name-hero">Nova Entry</div>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-specs">
+            <div class="spec-row"><span class="spec-key">CPU</span><span class="spec-val">Ryzen 5 7600X</span></div>
+            <div class="spec-row"><span class="spec-key">GPU</span><span class="spec-val">RX 7600 8GB</span></div>
+            <div class="spec-row"><span class="spec-key">RAM</span><span class="spec-val">16GB DDR5 5200</span></div>
+            <div class="spec-row"><span class="spec-key">SSD</span><span class="spec-val">500GB NVMe</span></div>
+            <div class="spec-row"><span class="spec-key">PSU</span><span class="spec-val">550W 80+ Bronze</span></div>
+          </div>
+          <div class="build-footer">
+            <div class="build-price">₹54,999</div>
+            <button class="btn-outline" style="padding:10px 20px;font-size:12px" onclick="addBuildDirect('Nova Entry',54999)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="build-card build-card-2 reveal reveal-delay-2">
+        <div class="build-img build-img-2">
+          <div class="build-img-overlay build-card-2"></div>
+          <div class="build-float-icon">🎮</div>
+          <div class="build-img-content">
+            <div class="build-tier-tag build-badge-violet">⭐ Most Popular · 1440p</div>
+            <div class="build-name-hero">Apex Pro</div>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-specs">
+            <div class="spec-row"><span class="spec-key">CPU</span><span class="spec-val">Core i7-13700K</span></div>
+            <div class="spec-row"><span class="spec-key">GPU</span><span class="spec-val">RTX 4070 Super 12GB</span></div>
+            <div class="spec-row"><span class="spec-key">RAM</span><span class="spec-val">32GB DDR5 6000</span></div>
+            <div class="spec-row"><span class="spec-key">SSD</span><span class="spec-val">1TB NVMe PCIe 4.0</span></div>
+            <div class="spec-row"><span class="spec-key">PSU</span><span class="spec-val">750W 80+ Gold</span></div>
+          </div>
+          <div class="build-footer">
+            <div class="build-price">₹1,14,999</div>
+            <button class="btn-outline" style="padding:10px 20px;font-size:12px" onclick="addBuildDirect('Apex Pro',114999)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="build-card build-card-3 reveal reveal-delay-3">
+        <div class="build-img build-img-3">
+          <div class="build-img-overlay build-card-3"></div>
+          <div class="build-float-icon">🚀</div>
+          <div class="build-img-content">
+            <div class="build-tier-tag build-badge-amber">🚀 Flagship · 4K</div>
+            <div class="build-name-hero">Titan Ultra</div>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-specs">
+            <div class="spec-row"><span class="spec-key">CPU</span><span class="spec-val">Ryzen 9 7950X</span></div>
+            <div class="spec-row"><span class="spec-key">GPU</span><span class="spec-val">RTX 4090 24GB</span></div>
+            <div class="spec-row"><span class="spec-key">RAM</span><span class="spec-val">64GB DDR5 6000</span></div>
+            <div class="spec-row"><span class="spec-key">SSD</span><span class="spec-val">2TB Samsung 990 Pro</span></div>
+            <div class="spec-row"><span class="spec-key">PSU</span><span class="spec-val">1000W 80+ Platinum</span></div>
+          </div>
+          <div class="build-footer">
+            <div class="build-price">₹3,24,999</div>
+            <button class="btn-outline" style="padding:10px 20px;font-size:12px" onclick="addBuildDirect('Titan Ultra',324999)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Why BuildMy.PC</div>
+      <h2>We're <span class="grad-text">Different.</span> Here's Why.</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1">
+        <div class="why-icon-wrap">🛡️</div>
+        <div class="why-title">3-Year Warranty</div>
+        <div class="why-desc">Every product comes backed by comprehensive manufacturer warranty and our dedicated in-house support team.</div>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="why-icon-wrap">🚚</div>
+        <div class="why-title">Free Delivery</div>
+        <div class="why-desc">Free pan-India shipping on all orders above ₹5,000. Express 24-hour delivery available in major cities.</div>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="why-icon-wrap">🔧</div>
+        <div class="why-title">Expert Support</div>
+        <div class="why-desc">Our certified PC engineers are available 7 days a week to help you choose the perfect parts for your needs.</div>
+      </div>
+      <div class="why-card reveal reveal-delay-4">
+        <div class="why-icon-wrap">💰</div>
+        <div class="why-title">Best Price Match</div>
+        <div class="why-desc">Found it cheaper elsewhere? We'll match the price — no questions asked. Always the best deal, guaranteed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="tag">Customer Stories</div>
+      <h2>Loved by <span class="grad-text-pink">Builders</span></h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"The PC builder tool made it so easy to pick compatible parts. My gaming rig arrived perfectly boxed and I had it running the same evening. Absolutely love it!"</p>
+        <div class="testimonial-author"><div class="author-avatar">AK</div><div><div class="author-name">Arjun Kapoor</div><div class="author-sub">Delhi · Gaming Enthusiast</div></div></div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Ordered the Apex Pro and it handles 4K video editing without breaking a sweat. The support team helped me choose the right RAM upgrade too. Top-notch service!"</p>
+        <div class="testimonial-author"><div class="author-avatar">PV</div><div><div class="author-name">Priya Venkat</div><div class="author-sub">Bangalore · Video Editor</div></div></div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-3">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"As a first-time builder I was nervous, but BuildMy.PC made it simple. Their compatibility checker saved me from a costly mistake. 10/10 would recommend to anyone!"</p>
+        <div class="testimonial-author"><div class="author-avatar">RS</div><div><div class="author-name">Rahul Sharma</div><div class="author-sub">Mumbai · CS Student</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="container">
+    <div class="newsletter-inner reveal">
+      <div class="tag">Stay Updated</div>
+      <h2>Get <span class="grad-text">Deals</span> First</h2>
+      <p>Subscribe for price drops, new arrivals, and exclusive offers for our builder community.</p>
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="you@email.com" id="nlEmail">
+        <button class="btn-primary" onclick="subscribe()"><span>Subscribe</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top-line"></div>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-text">BuildMy.PC</span>
+        <p>India's most trusted PC building platform. We help everyone from first-time builders to seasoned enthusiasts create their perfect machine.</p>
+        <div class="footer-social">
+          <div class="social-btn">𝕏</div>
+          <div class="social-btn">in</div>
+          <div class="social-btn">▶</div>
+          <div class="social-btn">f</div>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Shop</h4><ul><li><a href="#categories">All Components</a></li><li><a href="#builds">Pre-built PCs</a></li><li><a href="#builder">PC Builder</a></li><li><a href="#products">New Arrivals</a></li><li><a href="#">Deals &amp; Offers</a></li></ul></div>
+      <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Track Order</a></li><li><a href="#">Returns Policy</a></li><li><a href="#">Warranty Claims</a></li><li><a href="#">Building Guide</a></li><li><a href="#">Contact Us</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 BuildMy.PC — Made with ⚡ for builders everywhere.</p>
+      <p>🔒 Secure Payments &nbsp;|&nbsp; <a href="#hero">↑ Back to top</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="handleOverlayClick(event)">
+  <div class="cart-sidebar">
+    <div class="cart-header"><h3>Your Cart</h3><button class="close-cart" onclick="toggleCart()">✕</button></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+      <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animateRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animateRing)}
+animateRing();
+document.querySelectorAll('a,button,.cat-card,.product-card,.option-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('active');ring.classList.add('active')});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('active');ring.classList.remove('active')});
+});
+
+// ── HERO CANVAS ──
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W,H,particles=[];
+  const colors=['#8b5cf6','#22d3ee','#f472b6','#a78bfa'];
+  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight}
+  resize();window.addEventListener('resize',()=>{resize();init()});
+  function Particle(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-0.5)*0.4;this.vy=(Math.random()-0.5)*0.4;this.r=Math.random()*2+0.5;this.color=colors[Math.floor(Math.random()*colors.length)]}
+  function init(){particles=[];for(let i=0;i<70;i++)particles.push(new Particle())}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<particles.length;i++){
+      const p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
+      for(let j=i+1;j<particles.length;j++){
+        const q=particles[j];const d=Math.hypot(p.x-q.x,p.y-q.y);
+        if(d<130){
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle=p.color;ctx.globalAlpha=(1-d/130)*0.25;ctx.lineWidth=0.8;ctx.stroke();ctx.globalAlpha=1;
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  init();draw();
+})();
+
+// ── SCROLL ANIMATIONS ──
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+
+// ── COUNTER ANIMATION ──
+const statEls=document.querySelectorAll('.stat-val[data-target]');
+const statObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;const target=+el.dataset.target;const suffix=el.dataset.suffix||'+';
+    let current=0;const step=target/60;
+    const timer=setInterval(()=>{
+      current=Math.min(current+step,target);
+      const display=target>=1000?Math.round(current/100)/10+'K':Math.round(current);
+      el.textContent=display+suffix;
+      if(current>=target)clearInterval(timer);
+    },25);
+    statObs.unobserve(el);
+  });
+},{threshold:0.5});
+statEls.forEach(el=>statObs.observe(el));
+
+// ── TICKER ──
+(function(){const t=document.getElementById('tickerInner');const w=t.scrollWidth;t.style.width=w+'px';let x=0;function move(){x-=0.6;if(Math.abs(x)>=w/2)x=0;t.style.transform='translateX('+x+'px)';requestAnimationFrame(move)}move()})();
+
+// ── NAVBAR ──
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',scrollY>80)});
+
+// ── DATA ──
+const products=[
+  {id:1,cat:'CPU',name:'AMD Ryzen 7 7700X',icon:'🧠',bg:'img-bg-1',specs:'8C/16T · 4.5GHz Boost · AM5 Socket',price:24999,oldPrice:28999,badge:'Best Seller',badgeCls:'badge-best'},
+  {id:2,cat:'GPU',name:'RTX 4070 Super 12GB',icon:'🎮',bg:'img-bg-2',specs:'GDDR6X · 192-bit · DLSS 3.5 · 250W',price:52999,oldPrice:58999,badge:'Hot',badgeCls:'badge-hot'},
+  {id:3,cat:'RAM',name:'Corsair 32GB DDR5 6000',icon:'💾',bg:'img-bg-3',specs:'16GBx2 · CL30 · XMP 3.0 · RGB',price:8499,oldPrice:9999,badge:'Sale',badgeCls:'badge-sale'},
+  {id:4,cat:'Storage',name:'Samsung 990 Pro 1TB',icon:'💿',bg:'img-bg-4',specs:'PCIe 4.0 NVMe · 7,450 MB/s Read',price:7499,oldPrice:8999,badge:null,badgeCls:''},
+  {id:5,cat:'Case',name:'Lian Li PC-O11 Dynamic',icon:'🖥️',bg:'img-bg-5',specs:'ATX Mid Tower · Tempered Glass · E-ATX',price:10999,oldPrice:12999,badge:"Editor's Pick",badgeCls:'badge-pick'},
+  {id:6,cat:'PSU',name:'Corsair RM850x Gold',icon:'⚡',bg:'img-bg-6',specs:'850W · 80+ Gold Certified · Fully Modular',price:9999,oldPrice:11499,badge:null,badgeCls:''},
+];
+
+const builderConfig=[
+  {key:'cpu',label:'Processor (CPU)',options:[{name:'Ryzen 5 7600X',sub:'6C/12T · AM5 · 105W TDP',price:18999},{name:'Core i7-13700K',sub:'16C/24T · LGA1700 · 125W TDP',price:29999},{name:'Ryzen 9 7950X',sub:'16C/32T · AM5 · 170W TDP',price:59999}]},
+  {key:'gpu',label:'Graphics Card (GPU)',options:[{name:'RX 7600 8GB',sub:'RDNA3 · 128-bit · 165W',price:21999},{name:'RTX 4070 Super 12GB',sub:'Ada Lovelace · DLSS 3.5 · 220W',price:52999},{name:'RTX 4090 24GB',sub:'Ada Lovelace · GDDR6X · 450W',price:159999}]},
+  {key:'ram',label:'Memory (RAM)',options:[{name:'16GB DDR5 5200',sub:'8GBx2 · CL40 · XMP 3.0',price:4999},{name:'32GB DDR5 6000',sub:'16GBx2 · CL30 · XMP 3.0',price:8499},{name:'64GB DDR5 6000',sub:'32GBx2 · CL30 · XMP 3.0',price:16999}]},
+  {key:'storage',label:'Storage (SSD)',options:[{name:'500GB NVMe PCIe 4.0',sub:'5,000 MB/s Read',price:2999},{name:'1TB Samsung 990 Pro',sub:'7,450 MB/s Read · PCIe 4.0',price:7499},{name:'2TB Samsung 990 Pro',sub:'7,450 MB/s Read · PCIe 4.0',price:13999}]},
+  {key:'psu',label:'Power Supply (PSU)',options:[{name:'550W 80+ Bronze',sub:'Semi-Modular · APFC',price:3999},{name:'750W 80+ Gold',sub:'Fully Modular · Silent Fan',price:7999},{name:'1000W 80+ Platinum',sub:'Fully Modular · Zero RPM Mode',price:14999}]},
+];
+
+// ── STATE ──
+let cart=[],cartOpen=false,selectedOptions={},activeStep=0;
+const fmt=n=>'₹'+n.toLocaleString('en-IN');
+
+// ── PRODUCTS ──
+function renderProducts(){
+  document.getElementById('productGrid').innerHTML=products.map((p,i)=>`
+    <div class="product-card reveal reveal-delay-${(i%3)+1}">
+      <div class="product-img ${p.bg}">
+        ${p.badge?`<div class="product-badge ${p.badgeCls}">${p.badge}</div>`:''}
+        <div class="bg-pattern"></div>
+        <div class="bg-glow" style="background:${['#8b5cf6','#22d3ee','#f472b6','#4ade80','#fb923c','#22d3ee'][i]}"></div>
+        <span class="big-icon">${p.icon}</span>
+      </div>
+      <div class="product-body">
+        <div class="product-category">${p.cat}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-specs">${p.specs}</div>
+        <div class="product-footer">
+          <div><div class="product-price">${fmt(p.price)}</div>${p.oldPrice?`<span class="product-old">${fmt(p.oldPrice)}</span>`:''}</div>
+          <button class="add-to-cart" onclick="addToCart(${p.id})">+ Add</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.product-card.reveal').forEach(el=>observer.observe(el));
+}
+
+// ── BUILDER ──
+function renderBuilder(){
+  document.getElementById('builderSteps').innerHTML=builderConfig.map((step,i)=>`
+    <div class="builder-step ${i===activeStep?'active':''}">
+      <div class="step-header" onclick="toggleStep(${i})">
+        <div class="step-num">${i+1}</div>
+        <div class="step-label">
+          <div class="step-label-title">${step.label}</div>
+          <div class="step-label-sel ${selectedOptions[step.key]?'chosen':''}">${selectedOptions[step.key]?selectedOptions[step.key].name:'Not selected yet'}</div>
+        </div>
+        <span class="step-chevron">▾</span>
+      </div>
+      <div class="step-body">
+        <div class="option-list">
+          ${step.options.map((opt,j)=>`
+            <div class="option-item ${selectedOptions[step.key]?.name===opt.name?'selected':''}" onclick="selectOption('${step.key}',${j})">
+              <div><div class="option-name">${opt.name}</div><div class="option-sub">${opt.sub}</div></div>
+              <div class="option-price">${fmt(opt.price)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleStep(i){activeStep=activeStep===i?-1:i;renderBuilder()}
+function selectOption(key,j){selectedOptions[key]=builderConfig.find(s=>s.key===key).options[j];renderBuilder();updateSummary()}
+
+function updateSummary(){
+  const entries=Object.entries(selectedOptions);
+  const items=document.getElementById('summaryItems');
+  const total=document.getElementById('buildTotal');
+  if(!entries.length){items.innerHTML='<div class="summary-empty">✦ Start selecting components<br>to see your build take shape here.</div>';total.textContent='₹0';return}
+  items.innerHTML=entries.map(([k,v])=>`<div class="summary-item"><span class="summary-item-name">${builderConfig.find(s=>s.key===k).label.split(' ')[0]}</span><span class="summary-item-val">${fmt(v.price)}</span></div>`).join('');
+  total.textContent=fmt(entries.reduce((a,[,v])=>a+v.price,0));
+}
+
+// ── CART ──
+function addToCart(id){const p=products.find(x=>x.id===id);cart.push({id:Date.now(),icon:p.icon,name:p.name,cat:p.cat,price:p.price});updateCart();showToast('✓ '+p.name+' added!')}
+function addBuildDirect(name,price){cart.push({id:Date.now(),icon:'🖥️',name,cat:'Pre-built Config',price});updateCart();showToast('✓ '+name+' added to cart!')}
+function addBuildToCart(){
+  const entries=Object.entries(selectedOptions);
+  if(!entries.length){showToast('Select at least one component first!');return}
+  entries.forEach(([k,v])=>cart.push({id:Date.now()+Math.random(),icon:'⚙️',name:v.name,cat:k.toUpperCase(),price:v.price}));
+  updateCart();showToast('✓ '+entries.length+' components added to cart!');
+}
+function removeFromCart(id){cart=cart.filter(x=>x.id!==id);updateCart()}
+function updateCart(){
+  document.getElementById('cartCount').textContent=cart.length;
+  const items=document.getElementById('cartItems');
+  if(!cart.length){items.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div><p>Your cart is empty.<br>Start building your dream PC!</p></div>'}
+  else{items.innerHTML=cart.map(item=>`<div class="cart-item"><div class="cart-item-icon">${item.icon}</div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-cat">${item.cat}</div></div><div class="cart-item-price">${fmt(item.price)}</div><button class="remove-item" onclick="removeFromCart(${item.id})">✕</button></div>`).join('')}
+  document.getElementById('cartTotal').textContent=fmt(cart.reduce((a,b)=>a+b.price,0));
+}
+function toggleCart(){cartOpen=!cartOpen;document.getElementById('cartOverlay').classList.toggle('open',cartOpen);document.body.style.overflow=cartOpen?'hidden':''}
+function handleOverlayClick(e){if(e.target===document.getElementById('cartOverlay'))toggleCart()}
+function checkout(){if(!cart.length){showToast('Your cart is empty!');return}cart=[];updateCart();toggleCart();showToast('🎉 Order placed! Thank you for shopping with BuildMy.PC!')}
+function subscribe(){const e=document.getElementById('nlEmail');if(!e.value||!e.value.includes('@')){showToast('Please enter a valid email!');return}e.value='';showToast('🎉 Subscribed! Welcome to the BuildMy.PC community.')}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+// ── INIT ──
+renderProducts();renderBuilder();updateCart();
+</script>
+</body>
+</html>
